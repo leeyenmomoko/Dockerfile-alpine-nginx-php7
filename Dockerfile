@@ -12,7 +12,7 @@ RUN apk update
 RUN apk add tzdata
 RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo "${TIMEZONE}" > /etc/timezone
  
-RUN apk add curl nano nginx supervisor git \
+RUN apk add curl nano nginx supervisor openssh-client yarn nodejs-current git \
     php7 \
     php7-common \
     php7-intl \
