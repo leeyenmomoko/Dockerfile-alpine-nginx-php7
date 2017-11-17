@@ -85,13 +85,8 @@ RUN mkdir /var/www/html && chown nginx:nginx /var/www/html
 # clean 
 RUN apk del tzdata && rm -rf /var/cache/apk/*
 
-# copy shells
-COPY ./bin/ /root/bin/
-
 RUN echo "<?php echo 'ok'; ?>" > /var/www/html/ok.php
 
 EXPOSE 80
 
 CMD ["/usr/bin/supervisord", "--nodaemon", "-c", "/etc/supervisord.conf"]
-#CMD ["/root/bin/start.sh"]
-#CMD ["supervisord"]
