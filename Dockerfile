@@ -55,7 +55,7 @@ RUN apk update && apk add php7-mongodb
 RUN curl -sL https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
 
-RUN mkdir /run/php-fpm7 /run/nginx
+RUN mkdir /run/php-fpm /run/nginx
 
 # Copy supervisor configs
 COPY ./configs/supervisor/supervisor.d/ /etc/supervisor.d/
@@ -72,15 +72,17 @@ COPY ./configs/nginx/conf.d/ /etc/nginx/conf.d/
 RUN rm /etc/nginx/conf.d/default.conf
 
 # COPY php configs
-COPY ./configs/php/php.ini /etc/php7/php.ini
-COPY ./configs/php/php-fpm.d/www.conf /etc/php7/php-fpm.d/www.conf
+RUN ln -s /etc/php7 /etc/php
+RUN ln -s /usr/sbin/php-fpm7 /usr/sbin/php-fpm
+COPY ./configs/php/php.ini /etc/php/php.ini
+COPY ./configs/php/php-fpm.d/www.conf /etc/php/php-fpm.d/www.conf
 
 # Setting php env
-RUN sed -i "s|;date.timezone =.*|date.timezone = ${TIMEZONE}|" /etc/php7/php.ini && \
-    sed -i "s|memory_limit =.*|memory_limit = ${PHP_MEMORY_LIMIT}|" /etc/php7/php.ini && \
-    sed -i "s|upload_max_filesize =.*|upload_max_filesize = ${MAX_UPLOAD}|" /etc/php7/php.ini && \
-    sed -i "s|max_file_uploads =.*|max_file_uploads = ${PHP_MAX_FILE_UPLOAD}|" /etc/php7/php.ini && \
-    sed -i "s|post_max_size =.*|max_file_uploads = ${PHP_MAX_POST}|" /etc/php7/php.ini
+RUN sed -i "s|;date.timezone =.*|date.timezone = ${TIMEZONE}|" /etc/php/php.ini && \
+    sed -i "s|memory_limit =.*|memory_limit = ${PHP_MEMORY_LIMIT}|" /etc/php/php.ini && \
+    sed -i "s|upload_max_filesize =.*|upload_max_filesize = ${MAX_UPLOAD}|" /etc/php/php.ini && \
+    sed -i "s|max_file_uploads =.*|max_file_uploads = ${PHP_MAX_FILE_UPLOAD}|" /etc/php/php.ini && \
+    sed -i "s|post_max_size =.*|max_file_uploads = ${PHP_MAX_POST}|" /etc/php/php.ini
 
 # create default root folder
 RUN mkdir /var/www/html && chown nginx:nginx /var/www/html
