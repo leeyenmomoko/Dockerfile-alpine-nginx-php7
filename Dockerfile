@@ -46,7 +46,8 @@ RUN apk add curl nano nginx supervisor openssh-client yarn nodejs git \
     php7-dev \
     php7-simplexml \
     php7-tokenizer \
-    php7-xmlwriter
+    php7-xmlwriter \
+    php7-fileinfo
 
 # install php7-mongodb 
 RUN echo "http://dl-3.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
