@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine
 
 MAINTAINER leeyen <leeyenwork@gmail.com>
 
@@ -12,7 +12,7 @@ RUN apk update
 RUN apk add tzdata
 RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo "${TIMEZONE}" > /etc/timezone
  
-RUN apk add curl nano nginx supervisor openssh-client yarn nodejs git \
+RUN apk add bash curl nano nginx supervisor openssh-client yarn nodejs git \
     php7 \
     php7-common \
     php7-intl \
