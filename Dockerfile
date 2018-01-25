@@ -11,7 +11,7 @@ ENV PHP_MAX_POST 100M
 RUN apk update
 RUN apk add tzdata
 RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo "${TIMEZONE}" > /etc/timezone
- 
+
 RUN apk add bash curl nano nginx supervisor openssh-client yarn nodejs git \
     php7 \
     php7-common \
@@ -30,6 +30,9 @@ RUN apk add bash curl nano nginx supervisor openssh-client yarn nodejs git \
     php7-mysqli \
     php7-bcmath \
     php7-pdo_mysql \
+    php7-pdo_sqlite \
+    php7-pdo_pgsql \
+    php7-pdo_odbc \
     php7-gettext \
     php7-xmlreader \
     php7-xmlrpc \
@@ -49,7 +52,7 @@ RUN apk add bash curl nano nginx supervisor openssh-client yarn nodejs git \
     php7-xmlwriter \
     php7-fileinfo
 
-# install php7-mongodb 
+# install php7-mongodb
 RUN echo "http://dl-3.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
 RUN apk update && apk add php7-mongodb
 
@@ -66,7 +69,7 @@ RUN set -x ; \
   addgroup -g 82 -S www-data ; \
   adduser -u 82 -D -S -G www-data www-data && exit 0 ; exit 1
 
-# COPY nginx configs 
+# COPY nginx configs
 COPY ./configs/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./configs/nginx/sites-enabled/ /etc/nginx/sites-enabled/
 COPY ./configs/nginx/conf.d/ /etc/nginx/conf.d/
@@ -88,7 +91,7 @@ RUN sed -i "s|;date.timezone =.*|date.timezone = ${TIMEZONE}|" /etc/php/php.ini 
 # create default root folder
 RUN mkdir /var/www/html && chown nginx:nginx /var/www/html
 
-# clean 
+# clean
 RUN apk del tzdata && rm -rf /var/cache/apk/*
 
 RUN echo "<?php echo 'ok'; ?>" > /var/www/html/ok.php
